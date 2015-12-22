@@ -8,3 +8,7 @@
 Once connection is made, server and client enter request/response (send/receive) loop
 When connection is closed, server returns to listening state
 
+
+----- Resources -----
+
+http://www.binarytides.com/python-packet-sniffer-code-linux/
