@@ -60,6 +60,7 @@ while True:
     print('Sequence Number: ' + str(sequence))
     print('Acknowledgement: ' + str(acknowledgement))
     print('TCP header length: ' + str(tcph_length))
+    print()
 
     h_size = iph_length + tcph_length * 4
     data_size = len(packet) - h_size
