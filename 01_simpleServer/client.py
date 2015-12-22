@@ -2,7 +2,7 @@ import socket
 
 
 HOST = '192.168.0.5'
-PORT = 9999
+PORT = 80
 BUF_SIZE = 20480
 
 
