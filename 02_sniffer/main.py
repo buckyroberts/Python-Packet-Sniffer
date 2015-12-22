@@ -2,30 +2,32 @@ import socket
 import sys
 from struct import *
 
-# create an INET, STREAMing socket
+# Create an INET, STREAMing socket
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
 except socket.error as err:
     print('Error creating socket' + str(err))
     sys.exit()
 
-
-# Receive packets
 while True:
+
+    # Receive a message from a socket (buffer size)
+    # The return value is a pair (bytes, address) where bytes is a bytes object representing the data received and address is the address of the socket sending the data
     packet = s.recvfrom(65565)
 
     # Packet string from tuple
     packet = packet[0]
 
     # Take first 20 characters for the ip header
+    # An IP header is a prefix to an IP packet which contains information about IP version, source IP, destination IP, time-to-live, etc...
     ip_header = packet[0:20]
 
     # Unpack them
     iph = unpack('!BBHHHBBH4s4s', ip_header)
 
     version_ihl = iph[0]
-    version = version_ihl >> 4
-    ihl = version_ihl & 0xF
+    version = version_ihl >> 4  # Binary right shift - the left operands value is moved right by the number of bits specified by the right operand
+    ihl = version_ihl & 0xF  # Binary AND - operator copies a bit to the result if it exists in both operands
 
     iph_length = ihl * 4
 
@@ -34,7 +36,7 @@ while True:
     source_addr = socket.inet_ntoa(iph[8])
     dest_addr = socket.inet_ntoa(iph[9])
 
-    print('Version: ' + str(version))
+    print('IP Version: ' + str(version))
     print('IP Header Length: ' + str(ihl))
     print('TTL: ' + str(ttl))
     print('Protocol: ' + str(protocol))
@@ -62,7 +64,7 @@ while True:
     h_size = iph_length + tcph_length * 4
     data_size = len(packet) - h_size
 
-    # get data from the packet
+    # Get data from the packet
     data = packet[h_size:]
 
     print('Data: ' + str(data))
