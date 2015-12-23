@@ -37,7 +37,11 @@ def sniff_packets():
         # Get data from the packet (everything after the headers)
         data = packet[header_size:]
         print('Data Size: ' + str(data_size))
-        print('Data: ' + str(data))
+        try:
+            content = data[:].decode('utf-8')
+            print('Data: UTF-8\n\n' + str(content))
+        except:
+            print('Bad:\n\n' + str(data[:]))
         print('\n------------------------------\n')
 
 
