@@ -16,7 +16,7 @@ def parse_ip_packet(iph):
     print('IP Version: ' + str(version))
     print('IP Header Length: ' + str(iphl))
     print('TTL: ' + str(ttl))
-    print('Protocol: ' + str(protocol))
+    print('Internet Protocol: ' + str(protocol))
     print('Source Address: ' + str(source_addr))
     print('Destination Address: ' + str(dest_addr))
 
