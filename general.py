@@ -11,7 +11,7 @@ def decode_data(data):
 
         try:
             content = data[:].decode(codec)
-            print('Encoding: ' + codec + '\n\n' + str(content))
+            print('\nHTTP Header - Encoding: ' + codec + '\n\n' + str(content))
             encoding = codec
         except:
             continue
@@ -20,9 +20,13 @@ def decode_data(data):
             break
 
     if encoding is None:
-        print('\n---------- Encoding: Unknown ----------')
+        print('\n>>>>>>>>>>>>>>>>>>>> Encoding: Unknown <<<<<<<<<<<<<<<<<<<<\n')
         try:
-            print(data.decode('utf-8', 'ignore'))
+            test = data.decode('utf-8', 'ignore').split('\r\n\r\n')
+            print('\nHTTP Header\n')
+            print(test[0])
+            print('\nBody\n')
+            print(test[1:])
         except:
             print('Nope')
             print(str(data))
