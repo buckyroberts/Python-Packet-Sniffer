@@ -20,4 +20,4 @@ def decode_data(data):
             break
 
     if encoding is None:
-        print('Encoding: Unknown\n\n' + str(data[:]))
+        print('Encoding: Unknown\n\n' + str(data))
