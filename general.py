@@ -20,4 +20,9 @@ def decode_data(data):
             break
 
     if encoding is None:
-        print('Encoding: Unknown\n\n' + str(data))
+        print('\n---------- Encoding: Unknown ----------')
+        try:
+            print(data.decode('utf-8', 'ignore'))
+        except:
+            print('Nope')
+            print(str(data))
