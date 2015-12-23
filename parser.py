@@ -2,17 +2,16 @@ import socket
 
 
 # Parse an IP packet
-def parse_ip_packet(ip_header):
-    version_iphl = ip_header[0]
+def parse_ip_packet(iph):
+    version_iphl = iph[0]
     version = version_iphl >> 4  # Binary right shift - the left operands value is moved right by the number of bits specified by the right operand
     iphl = version_iphl & 0xF  # Binary AND - operator copies a bit to the result if it exists in both operands
+    iph_size = iphl * 4
 
-    ip_header_length = iphl * 4
-
-    ttl = ip_header[5]
-    protocol = ip_header[6]
-    source_addr = socket.inet_ntoa(ip_header[8])
-    dest_addr = socket.inet_ntoa(ip_header[9])
+    ttl = iph[5]
+    protocol = iph[6]
+    source_addr = socket.inet_ntoa(iph[8])
+    dest_addr = socket.inet_ntoa(iph[9])
 
     print('IP Version: ' + str(version))
     print('IP Header Length: ' + str(iphl))
@@ -21,23 +20,23 @@ def parse_ip_packet(ip_header):
     print('Source Address: ' + str(source_addr))
     print('Destination Address: ' + str(dest_addr))
 
-    return ip_header_length
+    return iph_size
 
 
 # Parse a TCP packet
-def parse_tcp_packet(tcp_header):
-    source_port = tcp_header[0]
-    dest_port = tcp_header[1]
-    sequence = tcp_header[2]
-    acknowledgement = tcp_header[3]
-    doff_reserved = tcp_header[4]
-    tcp_header_length = doff_reserved >> 4
+def parse_tcp_packet(tcph):
+    source_port = tcph[0]
+    dest_port = tcph[1]
+    sequence = tcph[2]
+    acknowledgement = tcph[3]
+    offset_reserved = tcph[4]
+    tcph_size = offset_reserved >> 4
 
-    print('Source Port: ' + str(source_port))
+    print('\nSource Port: ' + str(source_port))
     print('Destination Port: ' + str(dest_port))
     print('Sequence Number: ' + str(sequence))
     print('Acknowledgement: ' + str(acknowledgement))
-    print('TCP header length: ' + str(tcp_header_length))
+    print('TCP header size: ' + str(tcph_size))
     print()
 
-    return tcp_header_length
+    return tcph_size
