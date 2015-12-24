@@ -2,60 +2,65 @@ import socket
 import struct
 import textwrap
 
+TAB_1 = '\t - '
+TAB_2 = '\t\t - '
+TAB_3 = '\t\t\t - '
+TAB_4 = '\t\t\t\t - '
+
+DATA_TAB_1 = '\t '
+DATA_TAB_2 = '\t\t '
+DATA_TAB_3 = '\t\t\t '
+DATA_TAB_4 = '\t\t\t\t '
+
 
 def main():
-
     conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
     while True:
         tcp_data, addr = conn.recvfrom(65535)
         dest_mac, src_mac, proto, data = ethernet_frame(tcp_data)
         print('\nEthernet Frame:')
-        print('| - Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, proto))
+        print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, proto))
 
         if proto == 8:
             (version, header_length, ttl, proto, src, target, data) = ipv4_packet(data)
-            print('| - IPv4 Packet:')
-            print('    | - Version: {}, Header Length: {}, TTL: {},'.format(version, header_length, ttl))
-            print('    | - Protocol: {}, Source: {}, Target: {}'.format(proto, src, target))
+            print(TAB_1 + 'IPv4 Packet:')
+            print(TAB_2 + 'Version: {}, Header Length: {}, TTL: {},'.format(version, header_length, ttl))
+            print(TAB_2 + 'Protocol: {}, Source: {}, Target: {}'.format(proto, src, target))
 
             # ICMP
             if proto == 1:
                 icmp_type, code, checksum, data = icmp_packet(data)
-                print('    | - ICMP Packet:')
-                print('        | - Type: {}, Code: {}, Checksum: {},'.format(icmp_type, code, checksum))
-                print('        | - Data:')
-                print(format_multi_line('            | - ', data))
+                print(TAB_1 + 'ICMP Packet:')
+                print(TAB_2 + 'Type: {}, Code: {}, Checksum: {},'.format(icmp_type, code, checksum))
+                print(TAB_2 + 'Data:')
+                print(format_multi_line(DATA_TAB_3, data))
 
             # TCP
             elif proto == 6:
-                (src_port, dest_port, sequence, acknowledgment, flag_urg, flag_ack, flag_psh, flag_rst,
-                 flag_syn, flag_fin, data) = tcp_segment(data)
-                print('    | - TCP Segment:')
-                print('        | - Source Port: {}, Destination Port: {}'.format(src_port, dest_port))
-                print('        | - Sequence: {}, Acknowledgment: {}'.format(sequence, acknowledgment))
-                print('        | - Flags:')
-                print('             | - URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN:{}'.format(flag_urg, flag_ack,
-                                                                                                    flag_psh, flag_rst,
-                                                                                                    flag_syn, flag_fin))
-                print('        | - Data:')
-                print(format_multi_line('            | - ', data))
+                (src_port, dest_port, sequence, acknowledgment, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data) = tcp_segment(data)
+                print(TAB_1 + 'TCP Segment:')
+                print(TAB_2 + 'Source Port: {}, Destination Port: {}'.format(src_port, dest_port))
+                print(TAB_2 + 'Sequence: {}, Acknowledgment: {}'.format(sequence, acknowledgment))
+                print(TAB_2 + 'Flags:')
+                print(TAB_3 + 'URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN:{}'.format(flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin))
+                print(TAB_2 + 'Data:')
+                print(format_multi_line(DATA_TAB_3, data))
 
             # UDP
             elif proto == 17:
                 src_port, dest_port, length, data = udp_segment(data)
-                print('    | - UDP Segment:')
-                print('        | - Source Port: {}, Destination Port: {}, Length: {}'.format(src_port,
-                                                                                             dest_port, length))
+                print(TAB_1 + 'UDP Segment:')
+                print(TAB_2 + 'Source Port: {}, Destination Port: {}, Length: {}'.format(src_port, dest_port, length))
 
             # Other
             else:
-                print('    | - Data:')
-                print(format_multi_line('        | - ', data))
+                print(TAB_1 + 'Data:')
+                print(format_multi_line(DATA_TAB_2, data))
 
         else:
-            print('| - Data:')
-            print(format_multi_line('    | - ', data))
+            print('Data:')
+            print(format_multi_line(DATA_TAB_1, data))
 
 
 def format_multi_line(prefix, string, size=80):
@@ -64,8 +69,7 @@ def format_multi_line(prefix, string, size=80):
         string = ''.join(r'\x{:02x}'.format(byte) for byte in string)
         if size % 2:
             size -= 1
-    return '\n'.join([prefix + line
-                      for line in textwrap.wrap(string, size)])
+    return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
 
 
 # Returns MAC as string from bytes
