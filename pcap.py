@@ -16,5 +16,3 @@ class Pcap:
 
     def close(self):
         self.pcap_file.close()
-
-print(str(time.time()))
