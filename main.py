@@ -4,7 +4,7 @@ from general import *
 from parser import *
 
 
-# Create an INET, STREAMing socket
+# Create socket
 def socket_create():
     try:
         global s
@@ -44,7 +44,7 @@ def sniff_packets():
         if data_size > 0:
             decode_data(data)
 
-        print('\n\n------------------------------------------------------------------------------------------------------------------------\n\n')
+        print('\n------------------------------------------------------------------------------------------------------------------------\n')
 
 
 def main():
