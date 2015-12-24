@@ -66,6 +66,8 @@ def main():
             print('Data:')
             print(format_multi_line(DATA_TAB_1, data))
 
+    pcap.close()
+
 
 # Returns MAC as string from bytes
 def get_mac_addr(bytes_addr):
