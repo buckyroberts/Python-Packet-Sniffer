@@ -1,7 +1,7 @@
 import sys
 from struct import *
-from general import *
-from parser import *
+
+from Old.general import *
 
 
 # Create socket
