@@ -1,6 +1,7 @@
 import socket
 import struct
 import textwrap
+from pcap import Pcap
 
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
@@ -14,10 +15,12 @@ DATA_TAB_4 = '\t\t\t\t '
 
 
 def main():
+    pcap = Pcap('capture.pcap')
     conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
     while True:
         tcp_data, addr = conn.recvfrom(65535)
+        pcap.write(tcp_data)
 
         dest_mac, src_mac, proto, data = ethernet_frame(tcp_data)
         print('\nEthernet Frame:')
@@ -62,6 +65,8 @@ def main():
         else:
             print('Data:')
             print(format_multi_line(DATA_TAB_1, data))
+
+    pcap.close()
 
 
 # Returns MAC as string from bytes
