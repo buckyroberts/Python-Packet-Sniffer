@@ -14,16 +14,18 @@ DATA_TAB_4 = '\t\t\t\t '
 
 
 def main():
+
+    # not all computers store the bytes in the same order (ntohs(3) makes data compatible with all machines)
     conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
     while True:
         tcp_data, addr = conn.recvfrom(65535)
 
-        dest_mac, src_mac, proto, data = ethernet_frame(tcp_data)
+        dest_mac, src_mac, eth_proto, data = ethernet_frame(tcp_data)
         print('\nEthernet Frame:')
-        print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, proto))
+        print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, eth_proto))
 
-        if proto == 8:
+        if eth_proto == 8:
             (version, header_length, ttl, proto, src, target, data) = ipv4_packet(data)
             print(TAB_1 + 'IPv4 Packet:')
             print(TAB_2 + 'Version: {}, Header Length: {}, TTL: {},'.format(version, header_length, ttl))
