@@ -1,8 +1,8 @@
 from struct import *
 
 # Store as bytes data
-packet_data = pack('iif', 6, 19, 4.73)
-print(packet_data)
+packed_data = pack('iif', 6, 19, 4.73)
+print(packed_data)
 
 # How many bytes are needed to store these values
 print(calcsize('i'))
@@ -10,7 +10,7 @@ print(calcsize('f'))
 print(calcsize('iif'))
 
 # To get it back to normal
-original_data = unpack('iif', packet_data)
+original_data = unpack('iif', packed_data)
 print(original_data)
 
 # You can also do
