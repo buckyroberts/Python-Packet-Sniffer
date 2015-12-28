@@ -25,6 +25,7 @@ def main():
         print('\nEthernet Frame:')
         print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, eth_proto))
 
+        # 8 for IPv4
         if eth_proto == 8:
             (version, header_length, ttl, proto, src, target, data) = ipv4_packet(data)
             print(TAB_1 + 'IPv4 Packet:')
@@ -66,20 +67,20 @@ def main():
             print(format_multi_line(DATA_TAB_1, data))
 
 
-# Unpacks ethernet frame
+# Unpacks ethernet frame - ! for network (big-endian)
 def ethernet_frame(data):
     dest_mac, src_mac, proto = struct.unpack('! 6s 6s H', data[:14])
     return get_mac_addr(dest_mac), get_mac_addr(src_mac), socket.htons(proto), data[14:]
 
 
-# Returns MAC as string from bytes
+# Returns MAC as string from bytes (ie AA:BB:CC:DD:EE:FF)
 def get_mac_addr(bytes_addr):
     byte_str = map('{:02x}'.format, bytes_addr)
     mac_addr = ':'.join(byte_str).upper()
     return mac_addr
 
 
-# Unpacks IPv4 packet
+# Unpacks IPv4 packet (header length needed to find where data starts)
 def ipv4_packet(data):
     version_header_length = data[0]
     version = version_header_length >> 4
