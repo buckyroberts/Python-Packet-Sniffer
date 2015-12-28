@@ -19,9 +19,9 @@ def main():
     conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
     while True:
-        tcp_data, addr = conn.recvfrom(65535)
+        raw_data, addr = conn.recvfrom(65535)
 
-        dest_mac, src_mac, eth_proto, data = ethernet_frame(tcp_data)
+        dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
         print('\nEthernet Frame:')
         print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, eth_proto))
 
