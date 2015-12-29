@@ -2,6 +2,7 @@ import struct
 
 
 class TCP:
+
     def __init__(self, raw_data):
         (self.src_port, self.dest_port, self.sequence, self.acknowledgment, offset_reserved_flags) = struct.unpack(
             '! H H L L H', raw_data[:14])
