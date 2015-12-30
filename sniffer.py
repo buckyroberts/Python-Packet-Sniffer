@@ -13,10 +13,10 @@ TAB_2 = '\t\t - '
 TAB_3 = '\t\t\t - '
 TAB_4 = '\t\t\t\t - '
 
-DATA_TAB_1 = '\t '
-DATA_TAB_2 = '\t\t '
-DATA_TAB_3 = '\t\t\t '
-DATA_TAB_4 = '\t\t\t\t '
+DATA_TAB_1 = '\t   '
+DATA_TAB_2 = '\t\t   '
+DATA_TAB_3 = '\t\t\t   '
+DATA_TAB_4 = '\t\t\t\t   '
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
                 icmp = ICMP(ipv4.data)
                 print(TAB_1 + 'ICMP Packet:')
                 print(TAB_2 + 'Type: {}, Code: {}, Checksum: {},'.format(icmp.type, icmp.code, icmp.checksum))
-                print(TAB_2 + 'Data:')
+                print(TAB_2 + 'ICMP Data:')
                 print(format_multi_line(DATA_TAB_3, icmp.data))
 
             # TCP
@@ -53,15 +53,24 @@ def main():
                 print(TAB_2 + 'Source Port: {}, Destination Port: {}'.format(tcp.src_port, tcp.dest_port))
                 print(TAB_2 + 'Sequence: {}, Acknowledgment: {}'.format(tcp.sequence, tcp.acknowledgment))
                 print(TAB_2 + 'Flags:')
-                print(TAB_3 + 'URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN:{}'.format(tcp.flag_urg, tcp.flag_ack, tcp.flag_psh, tcp.flag_rst, tcp.flag_syn, tcp.flag_fin))
-                print(TAB_2 + 'Data:')
+                print(TAB_3 + 'URG: {}, ACK: {}, PSH: {}'.format(tcp.flag_urg, tcp.flag_ack, tcp.flag_psh))
+                print(TAB_3 + 'RST: {}, SYN: {}, FIN:{}'.format(tcp.flag_rst, tcp.flag_syn, tcp.flag_fin))
 
-                # HTTP
-                if tcp.src_port == 80 or tcp.dest_port == 80:
-                    http = HTTP(tcp.data)
-                    print(format_multi_line(DATA_TAB_3, http.data))
-                else:
-                    print(format_multi_line(DATA_TAB_3, tcp.data))
+                if len(tcp.data) > 0:
+
+                    # HTTP
+                    if tcp.src_port == 80 or tcp.dest_port == 80:
+                        print(TAB_2 + 'HTTP Data:')
+                        try:
+                            http = HTTP(tcp.data)
+                            http_info = str(http.data).split('\n')
+                            for line in http_info:
+                                print(DATA_TAB_3 + str(line))
+                        except:
+                            print(format_multi_line(DATA_TAB_3, tcp.data))
+                    else:
+                        print(TAB_2 + 'TCP Data:')
+                        print(format_multi_line(DATA_TAB_3, tcp.data))
 
             # UDP
             elif ipv4.proto == 17:
@@ -71,11 +80,11 @@ def main():
 
             # Other IPv4
             else:
-                print(TAB_1 + 'Data:')
+                print(TAB_1 + 'Other IPv4 Data:')
                 print(format_multi_line(DATA_TAB_2, ipv4.data))
 
         else:
-            print('Data:')
+            print('Ethernet Data:')
             print(format_multi_line(DATA_TAB_1, eth.data))
 
     pcap.close()
