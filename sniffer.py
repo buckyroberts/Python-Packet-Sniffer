@@ -6,6 +6,7 @@ from networking.icmp import ICMP
 from networking.tcp import TCP
 from networking.udp import UDP
 from networking.pcap import Pcap
+from networking.http import HTTP
 
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
@@ -54,7 +55,13 @@ def main():
                 print(TAB_2 + 'Flags:')
                 print(TAB_3 + 'URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN:{}'.format(tcp.flag_urg, tcp.flag_ack, tcp.flag_psh, tcp.flag_rst, tcp.flag_syn, tcp.flag_fin))
                 print(TAB_2 + 'Data:')
-                print(format_multi_line(DATA_TAB_3, tcp.data))
+
+                # HTTP
+                if tcp.src_port == 80 or tcp.dest_port == 80:
+                    http = HTTP(tcp.data)
+                    print(format_multi_line(DATA_TAB_3, http.data))
+                else:
+                    print(format_multi_line(DATA_TAB_3, tcp.data))
 
             # UDP
             elif ipv4.proto == 17:
