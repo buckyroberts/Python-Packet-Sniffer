@@ -7,6 +7,7 @@ from networking.tcp import TCP
 from networking.udp import UDP
 from networking.pcap import Pcap
 from networking.http import HTTP
+from networking.ipv6 import IPv6
 
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
@@ -27,12 +28,18 @@ def main():
         raw_data, addr = conn.recvfrom(65535)
         pcap.write(raw_data)
         eth = Ethernet(raw_data)
-
+        
         print('\nEthernet Frame:')
         print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(eth.dest_mac, eth.src_mac, eth.proto))
 
-        # IPv4
-        if eth.proto == 8:
+        # IPv6
+        if eth.proto == 34525:
+            ipv6 = IPv6(eth.data, addr)
+            print(str(ipv6))
+            input()
+
+        # # IPv4
+        if eth.proto == 2048:
             ipv4 = IPv4(eth.data)
             print(TAB_1 + 'IPv4 Packet:')
             print(TAB_2 + 'Version: {}, Header Length: {}, TTL: {},'.format(ipv4.version, ipv4.header_length, ipv4.ttl))

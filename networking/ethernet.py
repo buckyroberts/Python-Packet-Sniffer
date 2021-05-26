@@ -11,8 +11,5 @@ class Ethernet:
 
         self.dest_mac = get_mac_addr(dest)
         self.src_mac = get_mac_addr(src)
-        self.proto = socket.htons(prototype)
+        self.proto = int(prototype)
         self.data = raw_data[14:]
-
-
-
