@@ -1,5 +1,6 @@
 import socket
 from general import *
+
 from networking.ethernet import Ethernet
 from networking.ipv4 import IPv4
 from networking.icmp import ICMP
@@ -8,6 +9,7 @@ from networking.udp import UDP
 from networking.pcap import Pcap
 from networking.http import HTTP
 from networking.ipv6 import IPv6
+from networking.icmpv6 import ICMPv6
 
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
@@ -36,7 +38,16 @@ def main():
         if eth.proto == 34525:
             ipv6 = IPv6(eth.data, addr)
             print(str(ipv6))
-            input()
+
+            # ICMPv6
+            if ipv6.next_header == 58:
+                icmpv6 = ICMPv6(ipv6.data)
+                print(str(icmpv6))
+                input()
+
+            else:
+                print('Other IPv6 Data:')
+                print(format_multi_line(DATA_TAB_2, ipv6.data))
 
         # # IPv4
         if eth.proto == 2048:
