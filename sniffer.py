@@ -43,7 +43,6 @@ def main():
             if ipv6.next_header == 58:
                 icmpv6 = ICMPv6(ipv6.data)
                 print(str(icmpv6))
-                input()
 
             else:
                 print('Other IPv6 Data:')
