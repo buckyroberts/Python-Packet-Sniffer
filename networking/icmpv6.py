@@ -17,7 +17,7 @@ class ICMPv6:
         result += f'\t\t - Type: {self.type}, Type Name: {self.messages.icmp6_types[self.type]}\n'
         result += f'\t\t - Code: {self.code}'
         try:
-            result += f'\t\t - Code Name: {self.messages.icmp6_codes[self.code]}\n'
+            result += f'\t\t - Code Name: {self.messages.icmp6_codes[self.type][self.code]}\n'
         except:
             result += '\n'
         result += f'\t\t - Checksum: {self.checksum}\n'
