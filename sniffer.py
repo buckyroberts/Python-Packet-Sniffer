@@ -7,6 +7,8 @@ from networking.tcp import TCP
 from networking.udp import UDP
 from networking.pcap import Pcap
 from networking.http import HTTP
+from networking.ipv6 import IPv6
+from networking.icmpv6 import ICMPv6
 
 TAB_1 = '\t - '
 TAB_2 = '\t\t - '
@@ -32,7 +34,7 @@ def main():
         print(TAB_1 + 'Destination: {}, Source: {}, Protocol: {}'.format(eth.dest_mac, eth.src_mac, eth.proto))
 
         # IPv4
-        if eth.proto == 8:
+        if eth.proto == 2048:
             ipv4 = IPv4(eth.data)
             print(TAB_1 + 'IPv4 Packet:')
             print(TAB_2 + 'Version: {}, Header Length: {}, TTL: {},'.format(ipv4.version, ipv4.header_length, ipv4.ttl))
@@ -83,11 +85,21 @@ def main():
                 print(TAB_1 + 'Other IPv4 Data:')
                 print(format_multi_line(DATA_TAB_2, ipv4.data))
 
+        #IPv6
+        elif eth.proto == 34525:
+            ipv6 = IPv6(eth.data, addr)
+            print(str(ipv6))
+
+            # ICMPv6
+            if ipv6.next_header == 58:
+                icmpv6 = ICMPv6(ipv6.data)
+                print(str(icmpv6))
+            else:
+                print('Other IPv6 Data:')
+                print(format_multi_line(DATA_TAB_2, ipv6.data))
         else:
             print('Ethernet Data:')
             print(format_multi_line(DATA_TAB_1, eth.data))
-
     pcap.close()
-
 
 main()
